@@ -31,7 +31,7 @@ export default {
     };
   },
   methods: {
-    activate: function (el) {
+    activate(el) {
       this.active_el = el;
       this.$store.commit("UPDATAE_SHOW", el);
     },
