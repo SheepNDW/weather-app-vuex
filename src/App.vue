@@ -26,6 +26,7 @@ export default {
     LoadingPage,
   },
   created() {
+    this.$store.commit("UPDATE_CITYDATA", { isLoading: true, errMsg: "" });
     this.$store.dispatch("initData");
   },
   computed: {
