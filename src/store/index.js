@@ -1,4 +1,6 @@
 import axios from "axios";
+import Swal from 'sweetalert2'
+
 import Vue from "vue";
 
 import Vuex from "vuex";
@@ -11,39 +13,46 @@ const actions = {
     axios.get(`http://localhost:8080/api/location/search/?query=${value}`).then(
       response => {
         if (response.data.length) {
-          axios.get(`http://localhost:8080/api/location/${response.data[0].woeid}/`).then(
-            response2 => {
-              console.log("請求成功了");
-              context.commit("UPDATE_CityData", {
-                city: response.data[0].title,
-                weatherDatas: response2.data.consolidated_weather,
-                isLoading: false,
-                errMsg: "",
-              });
-            },
-            error2 => {
-              context.commit("UPDATE_CityData", { errMsg: error2.message, });
-            }
-          )
+          context.dispatch('getCityData', response.data[0].woeid)
         } else {
-          alert("查無此城市, 請重新輸入正確城市名");
-          context.commit("UPDATE_CityData", { isLoading: false });
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '無效的城市名!'
+          })
+          context.commit("UPDATE_CITYDATA", { isLoading: false });
         }
       },
       error => {
         console.log(error);
-        context.commit("UPDATE_CityData", { errMsg: error.message });
+        context.commit("UPDATE_CITYDATA", { errMsg: error.message });
+      }
+    )
+  },
+  getCityData(context, value) {
+    axios.get(`http://localhost:8080/api/location/${value}/`).then(
+      response => {
+        console.log("請求成功了");
+        context.commit("UPDATE_CITYDATA", {
+          city: response.data.title,
+          weatherDatas: response.data.consolidated_weather,
+          isLoading: false,
+          errMsg: "",
+        });
+      },
+      error => {
+        context.commit("UPDATE_CITYDATA", { errMsg: error.message, });
       }
     )
   },
   async initData(context) {
     const { data } = await axios.get(`http://localhost:8080/api/location/2306179/`)
-    context.commit('UPDATE_CityData', { weatherDatas: data.consolidated_weather })
+    context.commit('UPDATE_CITYDATA', { weatherDatas: data.consolidated_weather, isLoading: false })
   }
 };
 
 const mutations = {
-  UPDATE_CityData(state, value) {
+  UPDATE_CITYDATA(state, value) {
     state.cityInfo = { ...state.cityInfo, ...value }
   },
 
@@ -58,7 +67,16 @@ const state = {
     isLoading: false,
     errMsg: "",
     city: "Taipei",
-    weatherDatas: [],
+    weatherDatas: [
+      {
+        applicable_date: "",
+        the_temp: 0,
+        max_temp: 0,
+        min_temp: 0,
+        humidity: 0,
+        weather_state_abbr: "hc",
+      }
+    ],
   },
   currentSelect: 0,
 };
