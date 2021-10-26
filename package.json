@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "sweetalert2": "^11.1.9",
     "vue": "^2.6.11",
     "vuex": "^3.4.0"
   },
