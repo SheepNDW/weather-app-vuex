@@ -6,16 +6,7 @@
         <div class="MaxT clear">
           <span class="title">最高溫</span>
           <div class="valuebar">
-            <div
-              class="bar-value"
-              :style="
-                'width: ' +
-                100 *
-                  (Math.round(cityInfo.weatherDatas[currentSelect].max_temp) /
-                    50) +
-                '%'
-              "
-            ></div>
+            <div class="bar-value" :style="'width: ' + maxT + '%'"></div>
           </div>
           <span class="value"
             >{{
@@ -27,16 +18,7 @@
         <div class="MinT clear">
           <span class="title">最低溫</span>
           <div class="valuebar">
-            <div
-              class="bar-value"
-              :style="
-                'width: ' +
-                100 *
-                  (Math.round(cityInfo.weatherDatas[currentSelect].min_temp) /
-                    50) +
-                '%'
-              "
-            ></div>
+            <div class="bar-value" :style="'width: ' + minT + '%'"></div>
           </div>
           <span class="value"
             >{{
@@ -65,6 +47,20 @@ export default {
   },
   computed: {
     ...mapState(["cityInfo", "currentSelect"]),
+    maxT() {
+      return (
+        100 *
+        (Math.round(this.cityInfo.weatherDatas[this.currentSelect].max_temp) /
+          50)
+      );
+    },
+    minT() {
+      return (
+        100 *
+        (Math.round(this.cityInfo.weatherDatas[this.currentSelect].min_temp) /
+          50)
+      );
+    },
   },
 };
 </script>
