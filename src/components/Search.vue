@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     searchCity() {
-      this.$store.commit("UPDATE_CityData", { isLoading: true, errMsg: "" });
+      this.$store.commit("UPDATE_CITYDATA", { isLoading: true, errMsg: "" });
       this.$store.dispatch("searchCity", this.keyWord);
     },
   },
