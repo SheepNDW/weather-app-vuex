@@ -29,21 +29,20 @@ const actions = {
       }
     )
   },
-  getCityData(context, value) {
-    axios.get(`http://localhost:8080/api/location/${value}/`).then(
-      response => {
-        console.log("請求成功了");
-        context.commit("UPDATE_CITYDATA", {
-          city: response.data.title,
-          weatherDatas: response.data.consolidated_weather,
-          isLoading: false,
-          errMsg: "",
-        });
-      },
-      error => {
-        context.commit("UPDATE_CITYDATA", { errMsg: error.message, });
-      }
-    )
+  async getCityData(context, value) {
+    try {
+      const { data } = await axios.get(`http://localhost:8080/api/location/${value}/`)
+      console.log("請求成功了");
+      context.commit("UPDATE_CITYDATA", {
+        city: data.title,
+        weatherDatas: data.consolidated_weather,
+        isLoading: false,
+        errMsg: "",
+      });
+    }
+    catch (err) {
+      console.log('catch', err);
+    }
   },
   async initData(context) {
     const { data } = await axios.get(`http://localhost:8080/api/location/2306179/`)
