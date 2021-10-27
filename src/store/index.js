@@ -9,8 +9,26 @@ Vue.use(Vuex);
 
 
 const actions = {
-  searchCity(context, value) {
-    axios.get(`http://localhost:8080/api/location/search/?query=${value}`).then(
+  async searchCity(context, value) {
+    try {
+      const { data } = await axios.get(`http://localhost:8080/api/location/search/?query=${value}`)
+      // console.log(data);
+      if (data.length) {
+        context.dispatch('getCityData', data[0].woeid)
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: '無效的城市名!'
+        })
+        context.commit("UPDATE_CITYDATA", { isLoading: false });
+      }
+    }
+    catch (err) {
+      console.log('catch', err);
+      context.commit("UPDATE_CITYDATA", { errMsg: err });
+    }
+    /* axios.get(`http://localhost:8080/api/location/search/?query=${value}`).then(
       response => {
         if (response.data.length) {
           context.dispatch('getCityData', response.data[0].woeid)
@@ -27,7 +45,7 @@ const actions = {
         console.log(error);
         context.commit("UPDATE_CITYDATA", { errMsg: error.message });
       }
-    )
+    ) */
   },
   async getCityData(context, value) {
     try {
