@@ -24,14 +24,12 @@ const actions = {
       }
     }
     catch (err) {
-      console.log('catch', err);
       context.commit("UPDATE_CITYDATA", { errMsg: err });
     }
   },
   async getCityData(context, value) {
     try {
       const { data } = await axios.get(`https://www.metaweather.com/api/location/${value}/`)
-      console.log("請求成功了");
       context.commit("UPDATE_CITYDATA", {
         city: data.title,
         weatherDatas: data.consolidated_weather,
@@ -40,7 +38,7 @@ const actions = {
       });
     }
     catch (err) {
-      console.log('catch', err);
+      context.commit("UPDATE_CITYDATA", { errMsg: err });
     }
   },
   async initData(context) {
@@ -55,7 +53,6 @@ const mutations = {
   },
 
   UPDATAE_SHOW(state, value) {
-    console.log(value);
     state.currentSelect = value;
   },
 };
