@@ -11,8 +11,7 @@ Vue.use(Vuex);
 const actions = {
   async searchCity(context, value) {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/location/search/?query=${value}`)
-      // console.log(data);
+      const { data } = await axios.get(`https://www.metaweather.com/api/location/search/?query=${value}`)
       if (data.length) {
         context.dispatch('getCityData', data[0].woeid)
       } else {
@@ -28,28 +27,10 @@ const actions = {
       console.log('catch', err);
       context.commit("UPDATE_CITYDATA", { errMsg: err });
     }
-    /* axios.get(`http://localhost:8080/api/location/search/?query=${value}`).then(
-      response => {
-        if (response.data.length) {
-          context.dispatch('getCityData', response.data[0].woeid)
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: '無效的城市名!'
-          })
-          context.commit("UPDATE_CITYDATA", { isLoading: false });
-        }
-      },
-      error => {
-        console.log(error);
-        context.commit("UPDATE_CITYDATA", { errMsg: error.message });
-      }
-    ) */
   },
   async getCityData(context, value) {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/location/${value}/`)
+      const { data } = await axios.get(`https://www.metaweather.com/api/location/${value}/`)
       console.log("請求成功了");
       context.commit("UPDATE_CITYDATA", {
         city: data.title,
@@ -63,7 +44,7 @@ const actions = {
     }
   },
   async initData(context) {
-    const { data } = await axios.get(`http://localhost:8080/api/location/2306179/`)
+    const { data } = await axios.get(`https://www.metaweather.com/api/location/2306179/`)
     context.commit('UPDATE_CITYDATA', { weatherDatas: data.consolidated_weather, isLoading: false })
   }
 };
